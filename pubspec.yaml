@@ -31,6 +31,8 @@ dependencies:
   firebase_core: 
   adaptive_theme: ^2.2.0
   google_fonts:
+  firebase_auth:
+  cloud_firestore:
 
 dev_dependencies:
   flutter_test:
