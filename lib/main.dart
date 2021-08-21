@@ -1,16 +1,19 @@
+import 'package:easeaccess/user/dashboard.dart';
+import 'package:easeaccess/volunteer/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'volunteer/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(App());
 }
+
+String doc = "";
 
 class App extends StatefulWidget {
   @override
@@ -25,7 +28,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return AdaptiveTheme(
       light: ThemeData(
-        brightness: Brightness.light,
+        brightness: Brightness.dark,
         primarySwatch: Colors.amber,
         accentColor: Colors.amber,
       ),
@@ -34,8 +37,9 @@ class _AppState extends State<App> {
         primarySwatch: Colors.blueGrey,
         accentColor: Colors.amber,
       ),
-      initial: AdaptiveThemeMode.light,
+      initial: AdaptiveThemeMode.dark,
       builder: (theme, darkTheme) => MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Ease Access',
         theme: theme,
         darkTheme: darkTheme,
@@ -53,7 +57,15 @@ class Select extends StatefulWidget {
 class _SelectState extends State<Select> {
   @override
   Widget build(BuildContext context) {
-    return HomePage();
+    if (FirebaseAuth.instance.currentUser != null) {
+      return DashboardVolunteer();
+    } else {
+      if (doc != null || doc != "") {
+        return UserDashboard();
+      } else {
+        return HomePage();
+      }
+    }
   }
 }
 
@@ -65,6 +77,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
+    String username = "test";
     return Scaffold(
       body: Container(
           color: mainbg,
@@ -73,49 +86,105 @@ class _HomePageState extends State<HomePage> {
             children: <Widget>[
               Column(
                 children: <Widget>[
-                  Image.asset("assets/logo.png"),
+                  Image.asset(
+                    "assets/logobig.png",
+                    height: 200,
+                    width: 200,
+                  ),
                   Text(
                     "Ease-Access",
-                    style: GoogleFonts.poppins(fontSize: 30),
+                    style: GoogleFonts.poppins(
+                        color: maintext,
+                        fontSize: 45,
+                        fontWeight: FontWeight.w400),
                   ),
                   Text(
                     "tech made easy and accessible",
-                    style: GoogleFonts.poppins(fontSize: 13),
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      color: maintext,
+                    ),
                   ),
                 ],
               ),
               Column(
                 children: <Widget>[
-                  Container(
-                    color: maintext,
-                    child: Center(
-                      child: TextField(),
-                    ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: maintext),
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                                fontSize: 18, color: mainbg),
+                            onChanged: (value) {
+                              username = value;
+                            },
+                            decoration: InputDecoration(
+                              labelStyle: GoogleFonts.poppins(
+                                  fontSize: 18, color: mainbg),
+                              border: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              errorBorder: InputBorder.none,
+                              disabledBorder: InputBorder.none,
+                              hintStyle: GoogleFonts.poppins(
+                                  fontSize: 18, color: mainbg),
+                              hintText: "Enter Username",
+                            ),
+                          ),
+                        )),
                   ),
-                  MaterialButton(
-                    height: 50,
-                    minWidth: 180,
-                    color: maintext,
-                    onPressed: () {},
-                    child: Center(
-                      child: Text(
-                        "login",
-                        style: GoogleFonts.poppins(fontSize: 13, color: mainbg),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 60,
                       ),
-                    ),
-                  )
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(28.0),
+                        ),
+                        height: 60,
+                        minWidth: 100,
+                        color: maintext,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => UserDashboard()));
+                        },
+                        child: Center(
+                          child: Text(
+                            "login",
+                            style: GoogleFonts.poppins(
+                                fontSize: 18, color: mainbg),
+                          ),
+                        ),
+                      ))
                 ],
               ),
               MaterialButton(
+                minWidth: 200,
                 onPressed: () {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => VolunteerLogin()));
                 },
-                child: Text("login as a volunteer instead",
-                    style: GoogleFonts.poppins(fontSize: 13, color: maintext)),
-              ),
+                child: Text(
+                  "login as a volunteer instead",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: maintext,
+                  ),
+                ),
+              )
             ],
           )),
     );
