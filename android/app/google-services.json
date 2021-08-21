@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "452843906885",
+    "project_id": "ease-access",
+    "storage_bucket": "ease-access.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:452843906885:android:31a4d50576e1386942002c",
+        "android_client_info": {
+          "package_name": "com.easeaccess.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "452843906885-0mdvbt8rnonusa9u262lrq2fq6uecuqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD11-F5QWUg5nA8EZ5vKUV57ucGApNykws"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "452843906885-0mdvbt8rnonusa9u262lrq2fq6uecuqj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
