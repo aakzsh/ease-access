@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'volunteer/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,9 +37,21 @@ class _AppState extends State<App> {
         title: 'Ease Access',
         theme: theme,
         darkTheme: darkTheme,
-        home: HomePage(),
+        home: Select(),
       ),
     );
+  }
+}
+
+class Select extends StatefulWidget {
+  @override
+  _SelectState createState() => _SelectState();
+}
+
+class _SelectState extends State<Select> {
+  @override
+  Widget build(BuildContext context) {
+    return HomePage();
   }
 }
 
@@ -51,10 +65,57 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        child: Center(
-          child: Text("Hello"),
-        ),
-      ),
+          color: mainbg,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Image.asset("assets/logo.png"),
+                  Text(
+                    "Ease-Access",
+                    style: GoogleFonts.poppins(fontSize: 30),
+                  ),
+                  Text(
+                    "tech made easy and accessible",
+                    style: GoogleFonts.poppins(fontSize: 13),
+                  ),
+                ],
+              ),
+              Column(
+                children: <Widget>[
+                  Container(
+                    color: maintext,
+                    child: Center(
+                      child: TextField(),
+                    ),
+                  ),
+                  MaterialButton(
+                    height: 50,
+                    minWidth: 180,
+                    color: maintext,
+                    onPressed: () {},
+                    child: Center(
+                      child: Text(
+                        "login",
+                        style: GoogleFonts.poppins(fontSize: 13, color: mainbg),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+              MaterialButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VolunteerLogin()));
+                },
+                child: Text("login as a volunteer instead",
+                    style: GoogleFonts.poppins(fontSize: 13, color: maintext)),
+              ),
+            ],
+          )),
     );
   }
 }
