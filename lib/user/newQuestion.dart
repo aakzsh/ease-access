@@ -1,6 +1,8 @@
 import 'package:easeaccess/main.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class NewQuestion extends StatefulWidget {
   @override
@@ -8,6 +10,8 @@ class NewQuestion extends StatefulWidget {
 }
 
 class _NewQuestionState extends State<NewQuestion> {
+  String username = "";
+  int count = 0;
   String title, desc;
   @override
   Widget build(BuildContext context) {
@@ -124,7 +128,18 @@ class _NewQuestionState extends State<NewQuestion> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                   color: maintext,
-                  onPressed: () {},
+                  onPressed: () {
+                    FirebaseFirestore.instance
+                        .collection("questions")
+                        .doc("$username$count")
+                        .set({
+                      "title": title,
+                      "desc": desc,
+                      "answered": false,
+                      "ans": "",
+                      "url": "",
+                    });
+                  },
                   child: Text("Ask",
                       style: GoogleFonts.poppins(fontSize: 18, color: mainbg)),
                 )
