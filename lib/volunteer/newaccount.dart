@@ -149,6 +149,7 @@ class _NewAccountState extends State<NewAccount> {
                             "name": name,
                             "coins": 0,
                             "email": email,
+                            "type": "vol"
                           });
                           Navigator.pushReplacement(
                               context,

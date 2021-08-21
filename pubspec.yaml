@@ -33,6 +33,7 @@ dependencies:
   google_fonts:
   firebase_auth:
   cloud_firestore:
+  shared_preferences:
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easeaccess/user/dashboard.dart';
 import 'package:easeaccess/volunteer/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'volunteer/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,10 +62,12 @@ class _SelectState extends State<Select> {
     if (FirebaseAuth.instance.currentUser != null) {
       return DashboardVolunteer();
     } else {
-      if (doc != null || doc != "") {
+      if (FirebaseAuth.instance.currentUser.email
+              .substring(FirebaseAuth.instance.currentUser.email.length - 4) ==
+          "@e.c") {
         return UserDashboard();
       } else {
-        return HomePage();
+        return DashboardVolunteer();
       }
     }
   }
@@ -153,11 +157,70 @@ class _HomePageState extends State<HomePage> {
                         height: 60,
                         minWidth: 100,
                         color: maintext,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => UserDashboard()));
+                        onPressed: () async {
+                          FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(username)
+                              .get()
+                              .then((value) => {
+                                    if (value.exists)
+                                      {
+                                        FirebaseAuth.instance
+                                            .signInWithEmailAndPassword(
+                                                email: "$username@e.c",
+                                                password: "easeaccess")
+                                            .then((value) => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        UserDashboard())))
+                                      }
+                                    else
+                                      {
+                                        FirebaseAuth.instance
+                                            .createUserWithEmailAndPassword(
+                                                email: "$username@e.c",
+                                                password: "easeaccess")
+                                            .then((value) {
+                                          if (value.user != null) {
+                                            FirebaseFirestore.instance
+                                                .collection("users")
+                                                .doc(username)
+                                                .set({
+                                              "username": username,
+                                              "type": "general",
+                                              "questions": []
+                                            });
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserDashboard(),
+                                                ));
+                                          }
+                                        }).catchError((err) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text("Error"),
+                                                  content: Text(err.message),
+                                                  // content:
+                                                  //     Text("Invalid content, try again!"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("okay"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        })
+                                      }
+                                  });
                         },
                         child: Center(
                           child: Text(
@@ -184,7 +247,15 @@ class _HomePageState extends State<HomePage> {
                     color: maintext,
                   ),
                 ),
-              )
+              ),
+              // MaterialButton(
+              //     child: Text("lol"),
+              //     onPressed: () {
+              //       Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => UserDashboard()));
+              //     })
             ],
           )),
     );
