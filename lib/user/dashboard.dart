@@ -1,11 +1,13 @@
 import 'package:easeaccess/main.dart';
 import 'package:easeaccess/user/newQuestion.dart';
+import 'package:easeaccess/user/oldQuestions.dart';
 import 'package:easeaccess/user/tips.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'newQuestion.dart';
 import 'newQuestion.dart';
 
 class UserDashboard extends StatefulWidget {
@@ -14,15 +16,14 @@ class UserDashboard extends StatefulWidget {
 }
 
 class _UserDashboardState extends State<UserDashboard> {
-  x() async {
-    await FirebaseFirestore.instance
+  x() {
+    FirebaseFirestore.instance
         .doc(FirebaseAuth.instance.currentUser.uid)
         .get()
         .then((value) {
       if (value.exists) {
         setState(() {
-          username = "${(value.data()["username"])}";
-          count = (value.data()["count"]);
+          usernam = "${(value.data()["username"])}";
         });
       }
     });
@@ -30,6 +31,7 @@ class _UserDashboardState extends State<UserDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    x();
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
@@ -59,7 +61,7 @@ class _UserDashboardState extends State<UserDashboard> {
                         Row(
                           children: <Widget>[
                             Text(
-                              "Hey, $username",
+                              "Hey, $usernam",
                               style: GoogleFonts.poppins(
                                   fontSize: 25, color: mainbg),
                             ),
@@ -112,7 +114,7 @@ class _UserDashboardState extends State<UserDashboard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => NewQuestion()));
+                              builder: (context) => OldQuestions()));
                     },
                     child: Container(
                       decoration: BoxDecoration(
@@ -147,12 +149,12 @@ class _UserDashboardState extends State<UserDashboard> {
                 children: <Widget>[
                   InkWell(
                     onTap: () async {
-                      SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      doc = prefs.toString();
-                      await prefs.setString('doc', "");
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => HomePage()));
+                      FirebaseAuth.instance.signOut().then((value) => {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomePage()))
+                          });
                     },
                     child: Container(
                         decoration: BoxDecoration(

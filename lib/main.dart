@@ -59,15 +59,15 @@ class _SelectState extends State<Select> {
   @override
   Widget build(BuildContext context) {
     if (FirebaseAuth.instance.currentUser != null) {
-      return DashboardVolunteer();
-    } else {
-      if (FirebaseAuth.instance.currentUser.email
-              .substring(FirebaseAuth.instance.currentUser.email.length - 4) ==
-          "@e.c") {
+      if (FirebaseAuth.instance.currentUser.email.toString().substring(
+              FirebaseAuth.instance.currentUser.email.toString().length - 9) ==
+          "@ease.com") {
         return UserDashboard();
       } else {
-        return HomePage();
+        return DashboardVolunteer();
       }
+    } else {
+      return HomePage();
     }
   }
 }
@@ -166,19 +166,40 @@ class _HomePageState extends State<HomePage> {
                                       {
                                         FirebaseAuth.instance
                                             .signInWithEmailAndPassword(
-                                                email: "$username@e.c",
+                                                email: "$username@ease.com",
                                                 password: "easeaccess")
                                             .then((value) => Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         UserDashboard())))
+                                            .catchError((err) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  title: Text("Error"),
+                                                  content: Text(err.message),
+                                                  // content:
+                                                  //     Text("Invalid content, try again!"),
+                                                  actions: [
+                                                    TextButton(
+                                                      child: Text("okay"),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .pop();
+                                                      },
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        })
                                       }
                                     else
                                       {
                                         FirebaseAuth.instance
                                             .createUserWithEmailAndPassword(
-                                                email: "$username@e.c",
+                                                email: "$username@ease.com",
                                                 password: "easeaccess")
                                             .then((value) {
                                           if (value.user != null) {
@@ -187,9 +208,6 @@ class _HomePageState extends State<HomePage> {
                                                 .doc(username)
                                                 .set({
                                               "username": username,
-                                              "type": "general",
-                                              "questions": [],
-                                              "count": 0,
                                             });
                                             Navigator.pushReplacement(
                                                 context,
@@ -205,8 +223,6 @@ class _HomePageState extends State<HomePage> {
                                                 return AlertDialog(
                                                   title: Text("Error"),
                                                   content: Text(err.message),
-                                                  // content:
-                                                  //     Text("Invalid content, try again!"),
                                                   actions: [
                                                     TextButton(
                                                       child: Text("okay"),
@@ -248,14 +264,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
               ),
-              // MaterialButton(
-              //     child: Text("lol"),
-              //     onPressed: () {
-              //       Navigator.push(
-              //           context,
-              //           MaterialPageRoute(
-              //               builder: (context) => UserDashboard()));
-              //     })
             ],
           )),
     );

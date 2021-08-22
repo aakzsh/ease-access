@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 class NewQuestion extends StatefulWidget {
   @override
@@ -11,14 +12,18 @@ class NewQuestion extends StatefulWidget {
 
 String username = "";
 int count = 0;
+String usernam = "";
 
 class _NewQuestionState extends State<NewQuestion> {
+  DateTime now = DateTime.now();
+
   String title, desc;
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
+          height: double.infinity,
           color: mainbg,
           child: SingleChildScrollView(
             child: Column(
@@ -130,29 +135,23 @@ class _NewQuestionState extends State<NewQuestion> {
                       borderRadius: BorderRadius.circular(10)),
                   color: maintext,
                   onPressed: () {
-                    FirebaseFirestore.instance
-                        .collection("questions")
-                        .doc("$username$count")
-                        .set({
+                    String formattedDate =
+                        DateFormat('kk:mm,  d MMM').format(now);
+                    Map<dynamic, dynamic> lol = {
                       "title": title,
-                      "desc": desc,
                       "isanswered": false,
-                      "ans": "",
-                      "url": "",
-                      "by": username,
-                    });
+                      "desc": desc,
+                      "by": usernam,
+                      "answer": "",
+                      "ansurl": "",
+                      "datetime": formattedDate
+                    };
                     FirebaseFirestore.instance
-                        .collection("unanswered")
-                        .doc("$username$count")
-                        .set({
-                      "id": "$username$count",
-                    });
-                    FirebaseFirestore.instance
-                        .collection("users")
-                        .doc("$username")
-                        .set({
-                      "count": count + 1,
-                    });
+                        .collection("ques")
+                        .doc("list")
+                        .update({
+                      'queslist': FieldValue.arrayUnion([lol])
+                    }).then((value) => Navigator.pop(context));
                   },
                   child: Text("Ask",
                       style: GoogleFonts.poppins(fontSize: 18, color: mainbg)),

@@ -1,13 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easeaccess/main.dart';
+import 'package:easeaccess/user/answer.dart';
+import 'package:easeaccess/volunteer/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class NewAnswer extends StatefulWidget {
+  int i;
+  NewAnswer({Key key, @required this.i}) : super(key: key);
   @override
   _NewAnswerState createState() => _NewAnswerState();
 }
 
 class _NewAnswerState extends State<NewAnswer> {
+  NewAnswer a;
+
   String answer, url;
   @override
   Widget build(BuildContext context) {
@@ -95,7 +102,22 @@ class _NewAnswerState extends State<NewAnswer> {
                       width: 100,
                       child: MaterialButton(
                         height: 60,
-                        onPressed: () {},
+                        onPressed: () {
+                          Map<dynamic, dynamic> lol = {
+                            "title": queslist[a.i]['title'],
+                            "isanswered": true,
+                            "desc": queslist[a.i]['desc'],
+                            "by": queslist[a.i]['by'],
+                            "answer": answer,
+                            "ansurl": url,
+                            "datetime": queslist[a.i]['datetime']
+                          };
+                          FirebaseFirestore.instance
+                              .collection('ques')
+                              .doc('list')
+                              .update({'queslist[a.i]': lol}).then(
+                                  (value) => {Navigator.pop(context)});
+                        },
                         child: Center(
                             child: Text(
                           "Answer",

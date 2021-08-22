@@ -144,7 +144,7 @@ class _NewAccountState extends State<NewAccount> {
                         if (value.user != null) {
                           FirebaseFirestore.instance
                               .collection("volunteers")
-                              .doc(value.user?.uid)
+                              .doc(value.user.uid)
                               .set({
                             "name": name,
                             "coins": 0,
