@@ -9,9 +9,10 @@ class NewQuestion extends StatefulWidget {
   _NewQuestionState createState() => _NewQuestionState();
 }
 
+String username = "";
+int count = 0;
+
 class _NewQuestionState extends State<NewQuestion> {
-  String username = "";
-  int count = 0;
   String title, desc;
   @override
   Widget build(BuildContext context) {
@@ -135,9 +136,22 @@ class _NewQuestionState extends State<NewQuestion> {
                         .set({
                       "title": title,
                       "desc": desc,
-                      "answered": false,
+                      "isanswered": false,
                       "ans": "",
                       "url": "",
+                      "by": username,
+                    });
+                    FirebaseFirestore.instance
+                        .collection("unanswered")
+                        .doc("$username$count")
+                        .set({
+                      "id": "$username$count",
+                    });
+                    FirebaseFirestore.instance
+                        .collection("users")
+                        .doc("$username")
+                        .set({
+                      "count": count + 1,
                     });
                   },
                   child: Text("Ask",

@@ -4,6 +4,9 @@ import 'package:easeaccess/user/tips.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'newQuestion.dart';
 
 class UserDashboard extends StatefulWidget {
   @override
@@ -11,7 +14,20 @@ class UserDashboard extends StatefulWidget {
 }
 
 class _UserDashboardState extends State<UserDashboard> {
-  String username = "";
+  x() async {
+    await FirebaseFirestore.instance
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get()
+        .then((value) {
+      if (value.exists) {
+        setState(() {
+          username = "${(value.data()["username"])}";
+          count = (value.data()["count"]);
+        });
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
@@ -43,7 +59,7 @@ class _UserDashboardState extends State<UserDashboard> {
                         Row(
                           children: <Widget>[
                             Text(
-                              "Hey, $doc",
+                              "Hey, $username",
                               style: GoogleFonts.poppins(
                                   fontSize: 25, color: mainbg),
                             ),

@@ -66,7 +66,7 @@ class _SelectState extends State<Select> {
           "@e.c") {
         return UserDashboard();
       } else {
-        return DashboardVolunteer();
+        return HomePage();
       }
     }
   }
@@ -188,7 +188,8 @@ class _HomePageState extends State<HomePage> {
                                                 .set({
                                               "username": username,
                                               "type": "general",
-                                              "questions": []
+                                              "questions": [],
+                                              "count": 0,
                                             });
                                             Navigator.pushReplacement(
                                                 context,
