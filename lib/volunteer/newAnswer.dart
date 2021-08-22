@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easeaccess/main.dart';
 import 'package:easeaccess/user/answer.dart';
 import 'package:easeaccess/volunteer/dashboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,6 +21,7 @@ class _NewAnswerState extends State<NewAnswer> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        color: mainbg,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
@@ -99,7 +101,8 @@ class _NewAnswerState extends State<NewAnswer> {
                 Padding(
                     padding: EdgeInsets.all(20),
                     child: Container(
-                      width: 100,
+                      width: 140,
+                      color: maintext,
                       child: MaterialButton(
                         height: 60,
                         onPressed: () {
@@ -115,8 +118,14 @@ class _NewAnswerState extends State<NewAnswer> {
                           FirebaseFirestore.instance
                               .collection('ques')
                               .doc('list')
-                              .update({'queslist[a.i]': lol}).then(
-                                  (value) => {Navigator.pop(context)});
+                              .update({'queslist[a.i]': lol}).then((value) => {
+                                    FirebaseFirestore.instance
+                                        .collection('volunteers')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser.uid)
+                                        .update({"coins": coins + 20}).then(
+                                            (value) => Navigator.pop(context))
+                                  });
                         },
                         child: Center(
                             child: Text(

@@ -1,4 +1,5 @@
 import 'package:easeaccess/main.dart';
+import 'package:easeaccess/user/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -141,7 +142,7 @@ class _NewQuestionState extends State<NewQuestion> {
                       "title": title,
                       "isanswered": false,
                       "desc": desc,
-                      "by": usernam,
+                      "by": us,
                       "answer": "",
                       "ansurl": "",
                       "datetime": formattedDate

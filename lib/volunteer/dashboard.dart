@@ -55,10 +55,12 @@ class _DashboardVolunteerState extends State<DashboardVolunteer> {
             });
   }
 
+  String us;
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
+
     x();
     y();
     return Scaffold(

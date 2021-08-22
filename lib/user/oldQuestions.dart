@@ -1,4 +1,5 @@
 import 'package:easeaccess/main.dart';
+import 'package:easeaccess/user/answer.dart';
 import 'package:easeaccess/user/newQuestion.dart';
 import 'package:easeaccess/volunteer/dashboard.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class OldQuestions extends StatefulWidget {
 List<dynamic> personalQues;
 void calc() {
   for (int i = 0; i < queslist.length; i++) {
-    if (queslist[i]['by'] == username) {
+    if (queslist[i]['by'] == us) {
       personalQues.add(queslist[i]);
     }
   }
@@ -76,7 +77,13 @@ class _OldQuestionsState extends State<OldQuestions> {
                                 ),
                                 color:
                                     coldec(personalQues[index]['isanswered']),
-                                onPressed: () {})
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              Answer(l: personalQues[index])));
+                                })
                           ],
                         )
                       ],

@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'newQuestion.dart';
 import 'newQuestion.dart';
 
+String us;
+
 class UserDashboard extends StatefulWidget {
   @override
   _UserDashboardState createState() => _UserDashboardState();
@@ -31,6 +33,9 @@ class _UserDashboardState extends State<UserDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      us = FirebaseAuth.instance.currentUser.email.toString().split('@')[0];
+    });
     x();
     double w = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -61,7 +66,7 @@ class _UserDashboardState extends State<UserDashboard> {
                         Row(
                           children: <Widget>[
                             Text(
-                              "Hey, $usernam",
+                              "Hey, $us",
                               style: GoogleFonts.poppins(
                                   fontSize: 25, color: mainbg),
                             ),
